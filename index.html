@@ -2,11 +2,16 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Решай-ка</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Pangolin&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* iOS фиксы */
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       font-family: 'Pangolin', cursive;
@@ -21,6 +26,7 @@
         linear-gradient(rgba(70,130,180,0.12) 1px, transparent 1px);
       background-size: 28px 28px;
       background-position: center;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .notebook {
@@ -136,6 +142,10 @@
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
       min-width: 0;
+      /* iOS: убираем зум и скругления */
+      -webkit-appearance: none;
+      -webkit-border-radius: 8px;
+      appearance: none;
     }
 
     input[type="text"]:focus {
@@ -160,10 +170,15 @@
       cursor: pointer;
       white-space: nowrap;
       transition: background 0.2s, transform 0.1s;
+      /* iOS: убираем задержку и нативные стили */
+      -webkit-appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      appearance: none;
+      touch-action: manipulation;
     }
 
     button:hover { background: #1e5085; }
-    button:active { transform: scale(0.96); }
+    button:active { transform: scale(0.96); background: #1e5085; }
 
     #result {
       margin-top: 16px;
@@ -218,11 +233,18 @@
       color: #6d5b00;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .examples-grid span:hover {
       background: #ffe082;
       transform: translateY(-2px);
+    }
+
+    .examples-grid span:active {
+      background: #ffe082;
+      transform: scale(0.96);
     }
 
     .footer {
@@ -266,7 +288,6 @@
         border-radius: 6px;
       }
 
-      /* Убираем дырочки и красную линию на мобильных */
       .notebook::before {
         left: 14px;
         width: 2px;
@@ -388,7 +409,7 @@
           <span>+ сложение</span>
           <span>− вычитание</span>
           <span>× умножение</span>
-          <span>÷ деление</span>
+          <span>: деление</span>
           <span>^ степень</span>
           <span>sqrt корень</span>
           <span>( ) скобки</span>
@@ -397,7 +418,7 @@
       </div>
 
       <div class="input-row">
-        <input type="text" id="expr" placeholder="3 + 5 * 2" autocomplete="off" />
+        <input type="text" id="expr" placeholder="3 + 5 * 2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
         <button onclick="solve()">Решить</button>
       </div>
 
@@ -409,8 +430,8 @@
           <span onclick="setExample('3 + 5 * 2')">3 + 5 * 2</span>
           <span onclick="setExample('sqrt(144)')">sqrt(144)</span>
           <span onclick="setExample('2 ^ 10')">2 ^ 10</span>
-          <span onclick="setExample('(10 + 5) / 3')">(10 + 5) / 3</span>
-          <span onclick="setExample('100 / 4 + sqrt(16)')">100 / 4 + sqrt(16)</span>
+          <span onclick="setExample('(10 + 5) : 3')">(10 + 5) : 3</span>
+          <span onclick="setExample('100 : 4 + sqrt(16)')">100 : 4 + sqrt(16)</span>
           <span onclick="setExample('7 * 8 - 3')">7 * 8 − 3</span>
           <span onclick="setExample('sqrt(81) * 2 ^ 3')">sqrt(81) * 2 ^ 3</span>
           <span onclick="setExample('pi * 2')">pi * 2</span>
@@ -444,6 +465,7 @@
 
       let expr = raw
         .replace(/×/g, '*')
+        .replace(/:/g, '/')
         .replace(/÷/g, '/')
         .replace(/−/g, '-')
         .replace(/\^/g, '**')
@@ -491,4 +513,3 @@
   </script>
 </body>
 </html>
- 
